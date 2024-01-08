@@ -498,5 +498,5 @@ $RECYCLE.BIN/
 **/.idea/**/modules.xml
 
 #Project files
-RentAPI/appsettings.Development.json
+RentAPI/appsettings.json
 RentAPI/projectdb.db
