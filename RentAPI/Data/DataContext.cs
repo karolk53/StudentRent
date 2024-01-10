@@ -10,6 +10,10 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
                                             IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public DataContext(DbContextOptions options) : base(options){}
+
+    public DbSet<Address> Addresses { get; set; }
+    public DbSet<FlatStatus> FlatStatus { get; set; }
+    public DbSet<Flat> Flats { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
