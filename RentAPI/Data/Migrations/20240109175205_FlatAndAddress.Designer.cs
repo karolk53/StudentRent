@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentAPI.Data;
 
@@ -10,9 +11,11 @@ using RentAPI.Data;
 namespace RentAPI.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240109175205_FlatAndAddress")]
+    partial class FlatAndAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
@@ -264,9 +267,6 @@ namespace RentAPI.Data.Migrations
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<float>("Price")
                         .HasColumnType("REAL");
 
@@ -276,14 +276,9 @@ namespace RentAPI.Data.Migrations
                     b.Property<int?>("StatusId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("Surface")
-                        .HasColumnType("REAL");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("StatusId");
 
@@ -365,19 +360,11 @@ namespace RentAPI.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("RentAPI.Models.AppUser", "Owner")
-                        .WithMany("Flats")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RentAPI.Models.FlatStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
 
                     b.Navigation("Address");
-
-                    b.Navigation("Owner");
 
                     b.Navigation("Status");
                 });
@@ -389,8 +376,6 @@ namespace RentAPI.Data.Migrations
 
             modelBuilder.Entity("RentAPI.Models.AppUser", b =>
                 {
-                    b.Navigation("Flats");
-
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

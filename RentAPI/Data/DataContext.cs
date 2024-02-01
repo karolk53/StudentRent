@@ -10,6 +10,10 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
                                             IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public DataContext(DbContextOptions options) : base(options){}
+
+    public DbSet<Address> Addresses { get; set; }
+    public DbSet<FlatStatus> FlatStatus { get; set; }
+    public DbSet<Flat> Flats { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +29,18 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
             .HasMany(ur => ur.UserRoles)
             .WithOne(u => u.Role)
             .HasForeignKey(ur => ur.RoleId)
+            .IsRequired();
+
+        modelBuilder.Entity<AppUser>()
+            .HasMany(x => x.Flats)
+            .WithOne(f => f.Owner)
+            .HasForeignKey(fk => fk.OwnerId)
+            .IsRequired();
+
+        modelBuilder.Entity<Flat>()
+            .HasOne(o => o.Owner)
+            .WithMany(f => f.Flats)
+            .HasForeignKey(fk => fk.OwnerId)
             .IsRequired();
 
     }

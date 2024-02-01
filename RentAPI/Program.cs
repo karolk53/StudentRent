@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RentAPI.Data;
+using RentAPI.Data.Repositories;
 using RentAPI.Interfaces;
 using RentAPI.Models;
 using RentAPI.Services;
@@ -46,6 +47,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFlatRepository, FlatRepository>();
+builder.Services.AddScoped<IFlatStatusRepository, FlatStatusRepository>();
 
 var app = builder.Build();
 
@@ -71,7 +75,8 @@ try
     var context = services.GetRequiredService<DataContext>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(roleManager);
+    await Seed.SeedRoles(roleManager);
+    await Seed.SeedStatus(context);
 }
 catch (Exception ex)
 {
