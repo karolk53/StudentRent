@@ -36,12 +36,21 @@ public class FlatsController : BaseApiController
         _mapper.Map(flatAddDto, address);
         _mapper.Map(flatAddDto, flat);
         flat.Address = address;
-        flat.Status = await _flatStatusRepository.GetStatusByName("FOR_RENT");
+        flat.Status = await _flatStatusRepository.GetStatusByName(flatAddDto.CurrentStatus);
+        
+        user.Flats.Add(flat);
 
         _flatRepository.AddNewFlat(flat);
 
-        if (await _flatRepository.SaveAllAsync()) return Ok(flat);
+        if (await _flatRepository.SaveAllAsync()) return Ok(_mapper.Map<FlatResponseDto>(flat));
         
         return BadRequest("Failed to add flat");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IEnumerable<FlatResponseDto>> GetUsersFaltsList()
+    {
+        return await _flatRepository.GetUsersFlatsListAsync(User.GetUserId());
     }
 }

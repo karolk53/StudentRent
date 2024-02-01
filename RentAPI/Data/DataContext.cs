@@ -31,5 +31,17 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
             .HasForeignKey(ur => ur.RoleId)
             .IsRequired();
 
+        modelBuilder.Entity<AppUser>()
+            .HasMany(x => x.Flats)
+            .WithOne(f => f.Owner)
+            .HasForeignKey(fk => fk.OwnerId)
+            .IsRequired();
+
+        modelBuilder.Entity<Flat>()
+            .HasOne(o => o.Owner)
+            .WithMany(f => f.Flats)
+            .HasForeignKey(fk => fk.OwnerId)
+            .IsRequired();
+
     }
 }

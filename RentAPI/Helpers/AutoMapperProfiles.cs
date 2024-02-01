@@ -10,5 +10,7 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<FlatAddDto, Flat>();
         CreateMap<FlatAddDto, Address>();
+        CreateMap<Flat, FlatResponseDto>()
+            .ForMember(dest => dest.OwnerEmail, opt => opt.MapFrom(src => src.Owner.Email));
     }
 }

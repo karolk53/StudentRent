@@ -12,5 +12,6 @@ public class FlatAddDto
     public string Description { get; set; }
     public float Price { get; set; }
     public int NumberOfPeople { get; set; }
-    public string Status { get; set; }
+    public float Surface { get; set; }
+    public string CurrentStatus { get; set; }
 }
