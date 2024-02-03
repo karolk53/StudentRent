@@ -18,38 +18,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 builder.Services.AddDbContext<DataContext>(opt =>
 {
     //opt.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
-builder.Services.AddIdentityCore<AppUser>(options =>
-{
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-})
-    .AddRoles<AppRole>()
-    .AddRoleManager<RoleManager<AppRole>>()
-    .AddEntityFrameworkStores<DataContext>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IFlatRepository, FlatRepository>();
-builder.Services.AddScoped<IFlatStatusRepository, FlatStatusRepository>();
 
 var app = builder.Build();
 

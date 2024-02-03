@@ -53,4 +53,11 @@ public class FlatsController : BaseApiController
     {
         return await _flatRepository.GetUsersFlatsListAsync(User.GetUserId());
     }
+
+    [HttpGet]
+    public async Task<IEnumerable<FlatResponseDto>> GetListOfFlats()
+    {
+        return null;
+    }
+    
 }
