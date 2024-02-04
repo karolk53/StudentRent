@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RentAPI.Data;
 using RentAPI.Data.Repositories;
+using RentAPI.Extensions;
 using RentAPI.Interfaces;
 using RentAPI.Models;
 using RentAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentitySerivces(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -20,7 +22,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>(opt =>
 {
-    //opt.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 

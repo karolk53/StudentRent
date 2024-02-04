@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentAPI.DTOs.Flats;
 using RentAPI.Extensions;
+using RentAPI.Helpers.PaginationParams;
 using RentAPI.Interfaces;
 using RentAPI.Models;
 
@@ -21,6 +22,12 @@ public class FlatsController : BaseApiController
         _flatRepository = flatRepository;
         _flatStatusRepository = flatStatusRepository;
         _mapper = mapper;
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<FlatResponseDto>> GetListOfFlats([FromQuery] FlatParams flatParams)
+    {
+        return await _flatRepository.GetListOfFlatsAsync(flatParams);
     }
     
     [HttpPost]
@@ -47,17 +54,11 @@ public class FlatsController : BaseApiController
         return BadRequest("Failed to add flat");
     }
 
-    [HttpGet]
+    [HttpGet("my-flats")]
     [Authorize]
     public async Task<IEnumerable<FlatResponseDto>> GetUsersFaltsList()
     {
         return await _flatRepository.GetUsersFlatsListAsync(User.GetUserId());
-    }
-
-    [HttpGet]
-    public async Task<IEnumerable<FlatResponseDto>> GetListOfFlats()
-    {
-        return null;
     }
     
 }

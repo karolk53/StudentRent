@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RentAPI.DTOs.Flats;
+using RentAPI.Helpers;
+using RentAPI.Helpers.PaginationParams;
 using RentAPI.Interfaces;
 using RentAPI.Models;
 
@@ -22,13 +25,27 @@ public class FlatRepository : IFlatRepository
     {
         _context.Flats.Add(flat);
     }
-
+    
     public async Task<IEnumerable<FlatResponseDto>> GetUsersFlatsListAsync(int userId)
     {
         return await _context.Flats
             .Where(x => x.OwnerId.Equals(userId))
             .ProjectTo<FlatResponseDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
+    }
+
+    public async Task<IEnumerable<FlatResponseDto>> GetListOfFlatsAsync(FlatParams flatParams)
+    {
+        var query = _context.Flats.AsQueryable();
+
+        if (!flatParams.City.IsNullOrEmpty())
+        {
+            query = query.Where(x => x.Address.City.Equals(flatParams.City));
+        }
+
+        var flats = query.ProjectTo<FlatResponseDto>(_mapper.ConfigurationProvider);
+
+        return await PagedList<FlatResponseDto>.CreateAsync(flats, flatParams.PageNumber, flatParams.PageSize);
     }
 
     public async Task<bool> SaveAllAsync()
